@@ -1,7 +1,7 @@
 import { createClient } from '@/lib/supabase/server'
 import ProductListClient from '@/components/products/ProductListClient'
 
-export const revalidate = 0
+export const dynamic = 'force-dynamic'
 
 export default async function HomePage() {
   const supabase = await createClient()

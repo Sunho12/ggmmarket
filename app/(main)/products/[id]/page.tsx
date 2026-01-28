@@ -2,7 +2,7 @@ import { createClient } from '@/lib/supabase/server'
 import ProductDetail from '@/components/products/ProductDetail'
 import { notFound } from 'next/navigation'
 
-export const revalidate = 0
+export const dynamic = 'force-dynamic'
 
 export default async function ProductDetailPage({
   params,

@@ -2,7 +2,7 @@ import { createClient } from '@/lib/supabase/server'
 import ProductList from '@/components/products/ProductList'
 import { redirect } from 'next/navigation'
 
-export const revalidate = 0
+export const dynamic = 'force-dynamic'
 
 export default async function MyProductsPage() {
   const supabase = await createClient()
