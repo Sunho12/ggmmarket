@@ -13,11 +13,12 @@ type Product = Tables<'products'> & {
 export default function ProductListClient({ products }: { products: Product[] }) {
   const [selectedCategory, setSelectedCategory] = useState('all')
 
-  // 랜덤 추천 상품 선택
+  // 조회수가 가장 많은 상품 선택
   const featuredProduct = useMemo(() => {
     if (products.length === 0) return null
-    const randomIndex = Math.floor(Math.random() * products.length)
-    return products[randomIndex]
+    // 조회수 기준 내림차순 정렬 후 첫 번째 상품
+    const sortedByViews = [...products].sort((a, b) => b.view_count - a.view_count)
+    return sortedByViews[0]
   }, [products])
 
   // 카테고리 필터링
