@@ -17,8 +17,10 @@ export default function ImageUpload({ images, onChange, userId }: ImageUploadPro
 
   const uploadImage = async (file: File): Promise<string | null> => {
     try {
+      console.log('Uploading image:', file.name, 'User ID:', userId)
       const fileExt = file.name.split('.').pop()
       const fileName = `${userId}/${Date.now()}.${fileExt}`
+      console.log('File path:', fileName)
 
       const { error: uploadError } = await supabase.storage
         .from('product-images')
@@ -27,12 +29,16 @@ export default function ImageUpload({ images, onChange, userId }: ImageUploadPro
           upsert: false
         })
 
-      if (uploadError) throw uploadError
+      if (uploadError) {
+        console.error('Supabase upload error:', uploadError)
+        throw uploadError
+      }
 
       const { data: { publicUrl } } = supabase.storage
         .from('product-images')
         .getPublicUrl(fileName)
 
+      console.log('Upload successful, URL:', publicUrl)
       return publicUrl
     } catch (err) {
       console.error('Upload error:', err)
@@ -45,6 +51,8 @@ export default function ImageUpload({ images, onChange, userId }: ImageUploadPro
 
     const files = Array.from(e.target.files)
     const maxImages = 5
+
+    console.log('Files selected:', files.length, 'Current images:', images.length)
 
     if (images.length + files.length > maxImages) {
       setError(`최대 ${maxImages}개의 이미지만 업로드할 수 있습니다.`)
@@ -59,8 +67,10 @@ export default function ImageUpload({ images, onChange, userId }: ImageUploadPro
       const uploadedUrls = await Promise.all(uploadPromises)
       const validUrls = uploadedUrls.filter((url): url is string => url !== null)
 
+      console.log('Valid URLs:', validUrls)
       onChange([...images, ...validUrls])
     } catch (err) {
+      console.error('File change error:', err)
       setError('이미지 업로드에 실패했습니다.')
     } finally {
       setUploading(false)

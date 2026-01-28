@@ -31,26 +31,24 @@ export default function ProductForm({ product, userId }: ProductFormProps) {
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault()
+    alert('1. 폼 제출 시작')
     setLoading(true)
     setError(null)
 
     try {
-      if (images.length === 0) {
-        setError('최소 1개의 이미지를 업로드해주세요.')
-        setLoading(false)
-        return
-      }
-
+      alert('2. 데이터 준비 중')
       const productData = {
         title,
-        description,
+        description: description || null,
         price,
         category: category as Tables<'products'>['category'],
-        location,
-        images,
+        location: location || null,
+        images: images.length > 0 ? images : [],
         status: status as Tables<'products'>['status'],
         user_id: userId,
       }
+
+      alert('3. Supabase 요청 전 - 제목: ' + title)
 
       if (product) {
         const { error: updateError } = await supabase
@@ -59,24 +57,33 @@ export default function ProductForm({ product, userId }: ProductFormProps) {
           .eq('id', product.id)
 
         if (updateError) throw updateError
-
+        alert('4. 수정 완료')
         router.push(`/products/${product.id}`)
       } else {
-        const { data, error: insertError } = await supabase
+        alert('4. 등록 요청 시작')
+        const result = await supabase
           .from('products')
           .insert([productData])
           .select()
           .single()
 
-        if (insertError) throw insertError
+        alert('5. 등록 요청 완료 - 에러: ' + (result.error ? result.error.message : '없음'))
 
-        router.push(`/products/${data.id}`)
+        if (result.error) {
+          throw result.error
+        }
+
+        alert('6. 성공! ID: ' + result.data.id)
+        router.push(`/products/${result.data.id}`)
       }
 
       router.refresh()
     } catch (err: unknown) {
-      setError(err instanceof Error ? err.message : '상품 등록에 실패했습니다.')
+      const errorMessage = err instanceof Error ? err.message : '상품 등록에 실패했습니다.'
+      alert('에러 발생: ' + errorMessage)
+      setError('에러: ' + errorMessage)
     } finally {
+      alert('7. 완료 (finally)')
       setLoading(false)
     }
   }

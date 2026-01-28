@@ -1,4 +1,4 @@
-import Header from '@/components/layout/Header'
+import HeaderSimple from '@/components/layout/HeaderSimple'
 
 export default function MainLayout({
   children,
@@ -7,7 +7,7 @@ export default function MainLayout({
 }) {
   return (
     <>
-      <Header />
+      <HeaderSimple />
       <main className="min-h-screen bg-gray-50">
         {children}
       </main>
