@@ -1,5 +1,5 @@
 import { createClient } from '@/lib/supabase/server'
-import ProductList from '@/components/products/ProductList'
+import ProductListClient from '@/components/products/ProductListClient'
 
 export const revalidate = 0
 
@@ -20,8 +20,8 @@ export default async function HomePage() {
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      <h1 className="text-2xl font-bold mb-6">최근 등록 상품</h1>
-      <ProductList products={products || []} />
+      <h1 className="text-2xl font-bold mb-6">🍠 고구마마켓</h1>
+      <ProductListClient products={products || []} />
     </div>
   )
 }
